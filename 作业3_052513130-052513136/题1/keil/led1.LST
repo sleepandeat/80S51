@@ -1,0 +1,66 @@
+C51 COMPILER V9.01   LED1                                                                  10/11/2015 10:08:17 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE LED1
+OBJECT MODULE PLACED IN led1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE led1.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          sbit LED=P1^0;    
+   3          unsigned int i;
+   4          /*------------------------------------------------
+   5                              定时器初始化子程序
+   6          ------------------------------------------------*/
+   7          void Init_Timer0(void)
+   8          {
+   9   1       TMOD |= 0x01;    //使用模式1，16位定时器，使用"|"符号可以在使用多个定时器时不受影响                 
+  10   1       TH0=(65536-500)/256;             //重新赋值 12M晶振计算，指令周期1uS，
+  11   1       TL0=(65536-500)%256;   
+  12   1       EA=1;            //总中断打开
+  13   1       ET0=1;           //定时器中断打开
+  14   1       TR0=1;           //定时器开关打开
+  15   1      }
+  16          /*------------------------------------------------
+  17                              主程序
+  18          ------------------------------------------------*/
+  19          main()
+  20          {
+  21   1       Init_Timer0();
+  22   1       while(1)
+  23   1       {
+  24   2              if(i==500)
+  25   2              {
+  26   3                      i=0;
+  27   3                      LED=~LED;
+  28   3              }
+  29   2       }
+  30   1      
+  31   1      }
+  32          
+  33          /*------------------------------------------------
+  34                           定时器中断子程序
+  35          ------------------------------------------------*/
+  36          void Timer0_isr(void) interrupt 1 using 1
+  37          {
+  38   1       TH0=(65536-500)/256;             //重新赋值 12M晶振计算，指令周期1uS，
+  39   1       TL0=(65536-500)%256;         //半个周期500uS，即定时500次
+  40   1       i++;                     
+  41   1      
+  42   1      }
+  43          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     57    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

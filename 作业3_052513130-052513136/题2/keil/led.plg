@@ -1,0 +1,16 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\×ÀÃæ\×÷Òµ4_052513135-052513113\ex2\keil\led.uvproj
+Project File Date:  10/07/2015
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling LED2.c...
+linking...
+Program Size: data=12.0 xdata=0 code=89
+creating hex file from "led"...
+"led" - 0 Error(s), 0 Warning(s).
