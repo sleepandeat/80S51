@@ -1,0 +1,92 @@
+C51 COMPILER V8.12   作业7                                                                 11/08/2015 14:41:42 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE 作业7
+OBJECT MODULE PLACED IN 作业7.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE 作业7.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                                                                                                                                                                                                                                                           #include <reg51.h>
+   2          
+   3          unsigned  int Temp;
+   4          unsigned  char Counter;
+   5          unsigned  char  code  LED_seg[10]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};    //段选代码
+   6          unsigned  char  code  LED_bit[6]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf};    //位选代码
+   7          unsigned  char  Disp_Date[5];  //段码数字暂存
+   8          
+   9          void Delay (unsigned int);
+  10          void Time();
+  11          
+  12          //主函数
+  13          void main ()
+  14          {
+  15   1          unsigned char i;
+  16   1              Temp=0;
+  17   1              Counter=0;
+  18   1              Time();
+  19   1              while (1)
+  20   1              {
+  21   2                  Disp_Date[0]=Temp%10;               //个位
+  22   2                  Disp_Date[1]=(Temp/10)%10;      //十位
+  23   2                  Disp_Date[2]=(Temp/100)%10;         //百位
+  24   2                  Disp_Date[3]=(Temp/1000)%10;        //千位
+  25   2                  Disp_Date[4]=(Temp/10000)%10;       //万位
+  26   2                      for (i=0;i<5;i++)
+  27   2                      {
+  28   3                          P0=LED_bit[i];    //位选定
+  29   3                          P2=LED_seg[Disp_Date[i]];    //段码显示
+  30   3                              Delay (5);    //延时5ms
+  31   3                              P0=0xff;    //擦黑   ！！(共阴极)！！
+  32   3                      }
+  33   2              }
+  34   1      }
+  35            
+  36          //定时器程序
+  37          void Time()
+  38          {
+  39   1          TMOD=0x01;    //定时器采用工作方式1
+  40   1              TH0=(65536-54253)/256;
+  41   1              TL0=(65536-54253)%256;    //设定定时器初值
+  42   1              EA=1;    //打开总中断
+  43   1              ET0=1;    //打开定时器0中断
+  44   1              TR0=1;    //启动定时器0
+  45   1      }
+  46          
+  47          //定时器中断响应程序
+  48          void Time_0()interrupt 1 using 1
+  49          {
+  50   1          TH0=(65536-54253)/256;
+  51   1              TL0=(65536-54253)%256;    //定时器设定初值
+  52   1              Counter++;
+  53   1              if(Counter==20)    //1S的时间
+  54   1              {
+  55   2                  Temp++;
+C51 COMPILER V8.12   作业7                                                                 11/08/2015 14:41:42 PAGE 2   
+
+  56   2                      Counter=0;
+  57   2              }
+  58   1      }
+  59          
+  60          
+  61          //延时程序
+  62          void Delay (unsigned int x)
+  63          {
+  64   1          unsigned int y;
+  65   1              for (x;x>0;x--)
+  66   1                  for (y=110;y>0;y--);
+  67   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    227    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
